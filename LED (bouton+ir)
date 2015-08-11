@@ -1,0 +1,129 @@
+#include <IRremote.h>
+#include <IRremoteInt.h>
+
+// Variable led et bouton 
+
+int Led1 = 2;
+int Led2 = 4;
+int Led3 = 7;     
+int Led4 = 8;  
+int Led5 = 12;
+
+int PushP = 6;
+int PushM = 5;
+
+int VarLed;
+
+int ButtonP;
+int ButtonM;
+
+int del = 200;
+
+
+// telecommande 
+int input_pin = 10; //set D10 as input signal pin
+IRrecv irrecv(input_pin);
+decode_results signals;
+
+
+void setup() {
+// put your setup code here, to run once:
+// initialize digital pin 
+  pinMode(Led1, OUTPUT);
+  pinMode(Led2, OUTPUT);
+  pinMode(Led3, OUTPUT);
+  pinMode(Led4, OUTPUT);
+  pinMode(Led5, OUTPUT);
+
+  pinMode(PushP, INPUT);
+  pinMode(PushM, INPUT);
+
+ // voie serie
+ Serial.begin(9600);
+ //telecommande
+  irrecv.enableIRIn(); 
+}
+
+void loop() {
+  
+  if (irrecv.decode(&signals)) {
+    //Serial.println(signals.value);
+    unsigned int value = signals.value;
+    if (value == 57375){VarLed = VarLed -1;
+                      delay(del);}
+    if (value == 43095){VarLed = VarLed +1;
+                      delay(del);}
+    if (value == 61508){VarLed = VarLed +1;
+                      delay(del);}
+    if (value == 46662){VarLed = VarLed -1;
+                      delay(del);}
+    if (value == 14918){VarLed = VarLed +1;
+                      delay(del);}
+    if (value == 37734){VarLed = VarLed -1;
+                      delay(del);}
+                      
+    Serial.println(value);
+    
+    irrecv.resume(); // get the next signal              
+  }
+
+  // put your main code here, to run repeatedly:
+  ButtonP = digitalRead(PushP);
+  ButtonM = digitalRead(PushM);
+  
+  if (ButtonP == 1) {VarLed = VarLed +1;
+                      delay(del);}
+  if (ButtonM == 1) {VarLed = VarLed -1;
+                      delay(del);}
+  if (VarLed > 5) {VarLed = 5;}
+  if (VarLed < 0) {VarLed = 0;}
+
+  if (VarLed == 0){
+    digitalWrite(Led1, LOW);
+    digitalWrite(Led2, LOW);
+    digitalWrite(Led3, LOW);
+    digitalWrite(Led4, LOW);
+    digitalWrite(Led5, LOW);
+  }
+
+  if (VarLed == 1){
+    digitalWrite(Led1, HIGH);
+    digitalWrite(Led2, LOW);
+    digitalWrite(Led3, LOW);
+    digitalWrite(Led4, LOW);
+    digitalWrite(Led5, LOW);
+  }
+
+  if (VarLed == 2){
+    digitalWrite(Led1, HIGH);
+    digitalWrite(Led2, HIGH);
+    digitalWrite(Led3, LOW);
+    digitalWrite(Led4, LOW);
+    digitalWrite(Led5, LOW);
+  }
+
+  if (VarLed == 3){
+    digitalWrite(Led1, HIGH);
+    digitalWrite(Led2, HIGH);
+    digitalWrite(Led3, HIGH);
+    digitalWrite(Led4, LOW);
+    digitalWrite(Led5, LOW);
+  }
+
+  if (VarLed == 4){
+    digitalWrite(Led1, HIGH);
+    digitalWrite(Led2, HIGH);
+    digitalWrite(Led3, HIGH);
+    digitalWrite(Led4, HIGH);
+    digitalWrite(Led5, LOW);
+  }
+
+  if (VarLed == 5){
+    digitalWrite(Led1, HIGH);
+    digitalWrite(Led2, HIGH);
+    digitalWrite(Led3, HIGH);
+    digitalWrite(Led4, HIGH);
+    digitalWrite(Led5, HIGH);
+  }
+
+ }
